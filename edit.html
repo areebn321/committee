@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDITs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            background-image: url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&w=1920&q=80");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-container {
+            background: rgba(255,255,255,0.22);
+            border-radius: 22px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            padding: 36px 32px 28px 32px;
+            max-width: 420px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #2d3a4a;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        a {
+            display: inline-block;
+            margin-bottom: 18px;
+            color: #6a82fb;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1em;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: #fc5c7d;
+        }
+        button {
+            background: rgba(255,255,255,0.25);
+            color: #2d3a4a;
+            border: 1.5px solid rgba(255,255,255,0.22);
+            border-radius: 18px;
+            padding: 10px 22px;
+            font-size: 1em;
+            font-weight: 500;
+            margin: 8px 6px 8px 0;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.09);
+            outline: none;
+            backdrop-filter: blur(6px);
+        }
+        button:hover {
+            background: #6a82fb;
+            color: #fff;
+        }
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            border-radius: 12px;
+            border: 1.5px solid #e0eafc;
+            padding: 10px;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 1em;
+            margin: 10px 0 18px 0;
+            background: rgba(255,255,255,0.18);
+            resize: vertical;
+            box-shadow: 0 1px 4px rgba(44, 62, 80, 0.07);
+        }
+        #show {
+            white-space: pre-line;
+            background: rgba(255,255,255,0.18);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 14px;
+            color: #2d3a4a;
+            font-size: 1em;
+            min-height: 24px;
+        }
+        @media (max-width: 600px) {
+            .glass-container {
+                padding: 18px 6px 18px 6px;
+                max-width: 98vw;
+            }
+            textarea {
+                font-size: 0.97em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <a href="index.html">← Back</a> 
+        <h1 id="show"></h1>
+        <button id="showData">Show Data of Local Storage</button>
+        <div style="margin-bottom: 10px;">
+            <button id="editBasic">Edit Basic Value</button>
+            <button id="saveData">Copy</button>
+        </div>
+        <textarea id="data" cols="30" rows="10" placeholder="Paste or edit your localStorage JSON here"></textarea>
+        <div>
+            <button id="restoreData">Restore</button>
+            <button id="clearData">Clear All Data From Local Storage</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('editBasic').addEventListener('click', () => {
+            let prom = prompt("Enter a new value:");
+            if (prom !== null) {
+                prom = prom.trim();
+                if (prom !== "" && !isNaN(prom)) {
+                    localStorage.setItem("basicValue", Number(prom));
+                    alert("basicValue updated!");
+                } else {
+                    alert("Please enter a valid number");
+                }
+            }
+        });
+
+        document.getElementById('saveData').addEventListener('click', () => {
+            let data = {};
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+            if (Object.keys(data).length > 0) {
+                let json = JSON.stringify(data, null, 2);
+                navigator.clipboard.writeText(json).then(() => {
+                    alert("Data copied to clipboard!");
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            } else {
+                alert("No data found in localStorage.");
+            }
+        });
+
+        restoreData.addEventListener('click', () => {
+            let data = document.getElementById('data').value;
+            if (data) {
+                try {
+                    data = JSON.parse(data);
+                    for (let key in data) {
+                        localStorage.setItem(key, data[key]);
+                    }
+                    alert("Data restored to localStorage.");
+                } catch (e) {
+                    alert("Invalid JSON data.");
+                }
+            } else {
+                alert("No data to restore.");
+            }
+        });
+
+        showData.addEventListener('click', () => {
+            let data = {};
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+            if (Object.keys(data).length > 0) {
+                let output = "";
+                for (let key in data) {
+                    output += `${key}: ${data[key]}\n`;
+                }
+                document.getElementById('show').innerText = output;
+            } else {
+                document.getElementById('show').innerText = "No data found in localStorage.";
+            }
+        });
+
+        clearData.addEventListener('click', () => {
+            if (prompt("Are you sure you want to clear all data from localStorage? Type 'yes' to confirm.") === 'yes') {
+                localStorage.clear();
+                alert("All data cleared from localStorage.");
+                document.getElementById('show').innerText = "";
+            }
+        });
+    </script>
+</body>
+</html>

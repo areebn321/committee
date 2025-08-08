@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    margin: 0;
+    padding: 40px 0;
+    min-height: 100vh;
+    background-image: url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&w=1920&q=80");
+    /* background-image: url("https://images.pexels.com/photos/235985/pexels-photo-235985.jpeg"); */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+::selection {
+    background-color: navy;
+    color: #ffffff;
+}
+/* Table styles */
+.table {
+    width: 70%;
+    margin: 30px auto 20px auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(255,255,255,0.25);
+    border-radius: 22px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    overflow: hidden;
+    border: 1.5px solid rgba(255,255,255,0.18);
+}
+
+.table th, .table td {
+    padding: 18px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.10);
+    font-size: 1.08em;
+}
+
+.table thead {
+    background: #f5f5f5;
+}
+
+.table th {
+    background: rgba(255,255,255,0.25);
+    color: #2d3a4a;
+    font-size: 1.13em;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(44,62,80,0.07);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    /* Optional: add a subtle backdrop for better readability */
+    backdrop-filter: blur(8px) saturate(180%);
+    -webkit-backdrop-filter: blur(8px) saturate(180%);
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.table tbody tr:hover {
+    background: #f0f8ff;
+    transition: background 0.2s;
+}
+
+/* Button styles */
+button, .done-btn {
+    background: rgba(255,255,255,0.25);
+    color: #2d3a4a;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 24px;
+    cursor: pointer;
+    /* margin-top: 8px; */
+    font-size: 1em;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.09);
+    transition: 
+        background 0.2s, 
+        color 0.2s, 
+        transform 0.18s, 
+        box-shadow 0.18s;
+    outline: none;
+    backdrop-filter: blur(6px);
+    /* Improved glassy border for buttons */
+    border: 1.5px solid rgba(255,255,255,0.22);
+    /* Subtle shadow for glass effect */
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.10);
+}
+
+button:hover, .done-btn:hover {
+    background: rgba(255, 255, 255, 0.177);
+    color: #2d3a4a;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 24px rgba(44, 62, 80, 0.18);
+    border: 1.5px solid #6a82fb;
+}
+
+.done-btn.done {
+    background: rgba(67,233,123,0.18);
+    color: #27ae60;
+    border: 1.5px solid #43e97b;
+    box-shadow: 0 2px 12px rgba(39,174,96,0.13);
+}
+
+#addRow, #removeRow {
+    margin: 0 14px;
+    min-width: 130px;
+}
+
+div {
+    text-align: center;
+    margin-top: 36px;
+}
+
+.red {
+    color: #e74c3c;
+    font-weight: bold;
+    margin: 0;
+    font-size: 1.1em;
+    text-shadow: 0 1px 2px rgba(231,76,60,0.07);
+}
+
+.green {
+    color: #27ae60;
+    font-weight: bold;
+    margin: 0;
+    font-size: 1.1em;
+    text-shadow: 0 1px 2px rgba(39,174,96,0.07);
+}
+
+@media (max-width: 900px) {
+    .table {
+        width: 98%;
+    }
+    .table th, .table td {
+        padding: 10px 6px;
+        font-size: 0.98em;
+    }
+    #addRow, #removeRow {
+        min-width: 90px;
+        font-size: 0.95em;
+    }
+}
+#total{
+   
+    width: 100%;
+}
+tbody > tr > td:nth-child(2) {
+ display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+a {
+    display: inline-block;
+    margin-bottom: 18px;
+    margin-left: 18px;
+    color: #6a82fb;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1em;
+    transition: color 0.2s;
+}   
