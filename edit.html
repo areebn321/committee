@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDITs</title>
+    <title>Committee | Edit</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -107,6 +107,13 @@
     <div class="glass-container">
         <a href="index.html">← Back</a> 
         <h1 id="show"></h1>
+        <!-- User management section -->
+        <div style="margin-bottom: 18px;">
+            <label style="font-weight:600;">Users:</label>
+            <ul id="userList" style="padding-left:18px; margin:8px 0;"></ul>
+            <input type="text" id="newUserInput" placeholder="Add user name" style="border-radius:8px; padding:6px 10px; border:1px solid #ccc; font-size:1em;">
+            <button id="addUserBtn">Add User</button>
+        </div>
         <button id="showData">Show Data of Local Storage</button>
         <div style="margin-bottom: 10px;">
             <button id="editBasic">Edit Basic Value</button>
@@ -191,8 +198,60 @@
                 localStorage.clear();
                 alert("All data cleared from localStorage.");
                 document.getElementById('show').innerText = "";
+                userList.innerHTML = "";
             }
         });
+
+        // --- User management logic ---
+        function getUsers() {
+            // Remove default value, return empty array if not set
+            return JSON.parse(localStorage.getItem('users') || '[]');
+        }
+        function setUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+            window.dispatchEvent(new Event('storage')); // Notify other tabs/pages
+        }
+        function renderUserList() {
+            const users = getUsers();
+            const ul = document.getElementById('userList');
+            ul.innerHTML = '';
+            users.forEach((user, idx) => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '4px';
+                li.textContent = user + ' ';
+                // Remove button (only if more than 1 user)
+                if (users.length > 1) {
+                    const rmBtn = document.createElement('button');
+                    rmBtn.textContent = 'Remove';
+                    rmBtn.style.fontSize = '0.9em';
+                    rmBtn.style.marginLeft = '8px';
+                    rmBtn.onclick = function() {
+                        users.splice(idx, 1);
+                        setUsers(users);
+                        renderUserList();
+                    };
+                    li.appendChild(rmBtn);
+                }
+                ul.appendChild(li);
+            });
+        }
+        document.getElementById('addUserBtn').onclick = function() {
+            const input = document.getElementById('newUserInput');
+            let val = input.value.trim();
+            if (val) {
+                let users = getUsers();
+                if (!users.includes(val)) {
+                    users.push(val);
+                    setUsers(users);
+                    renderUserList();
+                    input.value = '';
+                } else {
+                    alert('User already exists.');
+                }
+            }
+        };
+        // Initial render
+        renderUserList();
     </script>
 </body>
 </html>

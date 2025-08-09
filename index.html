@@ -4,32 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Doc</title>
+    <title>Committee | Home</title>
 </head>
 <body>
     <a href="edit.html">Go to Edit page</a>
     <div id="total">
     <table class="table">
     <thead>
-        <tr>
-            <th>Areeb Total</th>
-            <th>Hania Total</th>
+        <tr id="totalHeaderRow">
+            <!-- Dynamic user total headers will be inserted here -->
         </tr>
     </thead>
     <tbody >
-     <tr >
-        <td id="totalRowAreeb">*</td>
-            <td id="totalRowHania">*</td>
-        </tr>
+     <tr id="totalRow">
+        <!-- Dynamic user total values will be inserted here -->
+     </tr>
     </tbody>
  </table>
 </div>
  <table class="table" id="table" >
     <thead>
-        <tr>
+        <tr id="userHeaderRow">
             <th>Date</th>
-            <th>Areeb</th>
-            <th>Hania</th>
+            <!-- Dynamic user headers will be inserted here -->
         </tr>
     </thead>
     <tbody id="tableBody">
@@ -42,6 +39,107 @@
  </div>
 
  <script src="main.js"></script>
-    <script src="script.js"></script>
+ <script src="script.js"></script>
+ <script>
+ function renderUserHeadersAndTotals() {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const userHeaderRow = document.getElementById('userHeaderRow');
+    userHeaderRow.innerHTML = '<th>Date</th>' + users.map(u => `<th>${u}</th>`).join('');
+    const totalHeaderRow = document.getElementById('totalHeaderRow');
+    totalHeaderRow.innerHTML = users.map(u => `<th>${u} Total</th>`).join('');
+    const totalRow = document.getElementById('totalRow');
+    totalRow.innerHTML = users.map((u, i) => `<td id="totalRowUser${i}">*</td>`).join('');
+ }
+ renderUserHeadersAndTotals();
+
+ // Prevent adding rows if no users exist
+ document.addEventListener('DOMContentLoaded', function() {
+    const tableBody = document.getElementById('tableBody');
+    const addRowBtn = document.getElementById('addRow');
+    addRowBtn.addEventListener('click', function(e) {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (!users.length) {
+            alert('Please add at least one user in the Edit page before adding rows.');
+            e.stopImmediatePropagation();
+            return false;
+        }
+    }, true);
+ });
+
+ // Helper to reload table UI after row deletion
+ function reloadTableUI() {
+    if (window.loadTableFromLS) {
+        window.loadTableFromLS();
+    } else if (typeof loadTableFromLS === 'function') {
+        loadTableFromLS();
+    } else {
+        location.reload(); 
+    }
+ }
+
+ // Remove Row: Select row, then confirm with random 3-letter code, and update localStorage/UI-
+
+ document.addEventListener('DOMContentLoaded', function() {
+    const removeRowBtn = document.getElementById('removeRow');
+    let rowSelectorDiv = null;
+
+    removeRowBtn.addEventListener('click', function(e) {
+        const tableBody = document.getElementById('tableBody');
+        if (!tableBody.rows.length) {
+            alert('No rows to remove.');
+            return;
+        }
+        if (rowSelectorDiv && rowSelectorDiv.parentNode) {
+            rowSelectorDiv.parentNode.removeChild(rowSelectorDiv);
+        }
+        rowSelectorDiv = document.createElement('div');
+        rowSelectorDiv.style.position = 'fixed';
+        rowSelectorDiv.style.top = '50%';
+        rowSelectorDiv.style.left = '50%';
+        rowSelectorDiv.style.transform = 'translate(-50%, -50%)';
+        rowSelectorDiv.style.background = '#fff';
+        rowSelectorDiv.style.padding = '18px 24px';
+        rowSelectorDiv.style.border = '2px solid #6a82fb';
+        rowSelectorDiv.style.borderRadius = '12px';
+        rowSelectorDiv.style.boxShadow = '0 4px 24px rgba(31,38,135,0.13)';
+        rowSelectorDiv.style.zIndex = '9999';
+        rowSelectorDiv.innerHTML = '<b>Select a row to remove:</b><br><br>';
+        for (let i = 0; i < tableBody.rows.length; i++) {
+            const row = tableBody.rows[i];
+            const btn = document.createElement('button');
+            btn.textContent = `Row ${i + 1} (${row.cells[0]?.textContent || ''})`;
+            btn.style.margin = '4px 0';
+            btn.onclick = function() {
+                const code = Array(3).fill(0).map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
+                const input = prompt(`Type the following 3 small letters to confirm deletion:\n${code}`);
+                if (input === code) {
+                    let data = JSON.parse(localStorage.getItem('tableData') || '[]');
+                    data.splice(i, 1);
+                    localStorage.setItem('tableData', JSON.stringify(data));
+                    reloadTableUI();
+                    alert('Row deleted.');
+                } else {
+                    alert('Incorrect code. Row not deleted.');
+                }
+                if (rowSelectorDiv && rowSelectorDiv.parentNode) {
+                    rowSelectorDiv.parentNode.removeChild(rowSelectorDiv);
+                }
+            };
+            rowSelectorDiv.appendChild(btn);
+            rowSelectorDiv.appendChild(document.createElement('br'));
+        }
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.style.marginTop = '10px';
+        cancelBtn.onclick = function() {
+            if (rowSelectorDiv && rowSelectorDiv.parentNode) {
+                rowSelectorDiv.parentNode.removeChild(rowSelectorDiv);
+            }
+        };
+        rowSelectorDiv.appendChild(cancelBtn);
+        document.body.appendChild(rowSelectorDiv);
+    });
+ });
+ </script> 
 </body>
 </html>
