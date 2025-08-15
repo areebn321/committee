@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Get users from localStorage or default
     function getUsers() {
-        return JSON.parse(localStorage.getItem('users') || '["Areeb","Hania"]');
+        return JSON.parse(localStorage.getItem('users') );
     }
 
     // Helper: Save table data to localStorage
@@ -150,11 +150,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     valueElem.classList.add('green');
                 }
             } else {
-                btn.classList.remove('done');
-                btn.textContent = 'Done';
-                if (valueElem) {
-                    valueElem.classList.remove('green');
-                    valueElem.classList.add('red');
+                let ask = confirm("Are you sure you want to mark this task as not done?");
+                if (ask) {
+                    btn.classList.remove('done');
+                    btn.textContent = 'Done';
+                    if (valueElem) {
+                        valueElem.classList.remove('green');
+                        valueElem.classList.add('red');
+                    }
                 }
             }
             saveTableToLS();
